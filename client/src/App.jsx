@@ -12,6 +12,12 @@ import Unauthorized from "./components/Unauthorized";
 
 import RequireAuth from "./components/RequireAuth";
 
+const ROLES = {
+  User: 2001,
+  Editor: 1984,
+  Admin: 5150,
+};
+
 function App() {
   return (
     <Routes>
@@ -23,25 +29,32 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* Protected Routes */}
-        <Route element={<RequireAuth />}>
+        {/* <Route element={<RequireAuth />}>
           <Route path="/" element={<Home />} />
           <Route path="editor" element={<Editor />} />
           <Route path="admin" element={<Admin />} />
-          <Route path="lounge" element={<Lounge />} />
-        </Route>
-        {/* Protected Routes with Roles */}
-        {/* <Route element={<RequireAuth allowedRoles={[126]} />}>
-          <Route path="/" element={<Home />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={[125]} />}>
-          <Route path="editor" element={<Editor />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={[124]} />}>
-          <Route path="admin" element={<Admin />} />
-        </Route>
-        <Route element={<RequireAuth allowedRoles={[123]} />}>
           <Route path="lounge" element={<Lounge />} />
         </Route> */}
+
+        {/* Protected Routes with Roles */}
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
+          <Route path="editor" element={<Editor />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}>
+          <Route path="admin" element={<Admin />} />
+        </Route>
+
+        <Route
+          element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}
+        >
+          <Route path="lounge" element={<Lounge />} />
+        </Route>
 
         {/* Catch all */}
         <Route path="*" element={<Missing />} />
