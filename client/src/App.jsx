@@ -10,6 +10,7 @@ import Login from "./components/Login";
 import Missing from "./components/Missing";
 import Unauthorized from "./components/Unauthorized";
 
+import PersistLogin from "./components/PersistLogin";
 import RequireAuth from "./components/RequireAuth";
 
 const ROLES = {
@@ -29,31 +30,36 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* Protected Routes */}
-        {/* <Route element={<RequireAuth />}>
-          <Route path="/" element={<Home />} />
-          <Route path="editor" element={<Editor />} />
-          <Route path="admin" element={<Admin />} />
-          <Route path="lounge" element={<Lounge />} />
+        {/* <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth />}>
+            <Route path="/" element={<Home />} />
+            <Route path="editor" element={<Editor />} />
+            <Route path="admin" element={<Admin />} />
+            <Route path="lounge" element={<Lounge />} />
+          </Route>
         </Route> */}
 
         {/* Protected Routes with Roles */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
+            <Route path="/" element={<Home />} />
+          </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.User]} />}>
-          <Route path="/" element={<Home />} />
-        </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
+            <Route path="editor" element={<Editor />} />
+          </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Editor]} />}>
-          <Route path="editor" element={<Editor />} />
-        </Route>
+          <Route
+            element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}
+          >
+            <Route path="admin" element={<Admin />} />
+          </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}>
-          <Route path="admin" element={<Admin />} />
-        </Route>
-
-        <Route
-          element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}
-        >
-          <Route path="lounge" element={<Lounge />} />
+          <Route
+            element={<RequireAuth allowedRoles={[ROLES.Editor, ROLES.Admin]} />}
+          >
+            <Route path="lounge" element={<Lounge />} />
+          </Route>
         </Route>
 
         {/* Catch all */}

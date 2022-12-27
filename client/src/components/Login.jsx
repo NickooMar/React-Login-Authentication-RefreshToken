@@ -3,6 +3,8 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 
 import axios from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import useInput from "../hooks/useInput";
+import useToggle from "../hooks/useToggle";
 
 const LOGIN_URL = "/auth";
 
@@ -16,9 +18,10 @@ const Login = () => {
   const userRef = useRef();
   const errRef = useRef();
 
-  const [user, setUser] = useState("");
+  const [user, resetUser, userAttribs] = useInput("user", "");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [check, toggleCheck] = useToggle("persist", false);
 
   useEffect(() => {
     userRef.current.focus();
@@ -47,7 +50,8 @@ const Login = () => {
 
       setAuth({ user, pwd, roles, accessToken });
       navigate(from, { replace: true });
-      setUser("");
+      // setUser("");
+      resetUser();
       setPwd("");
     } catch (error) {
       if (!error?.response) {
@@ -62,6 +66,14 @@ const Login = () => {
       errRef.current.focus();
     }
   };
+
+  // const togglePersist = () => {
+  //   setPersist((prev) => !prev);
+  // };
+
+  // useEffect(() => {
+  //   localStorage.setItem("persist", persist);
+  // }, [persist]);
 
   return (
     <section>
@@ -82,8 +94,7 @@ const Login = () => {
           id="username"
           ref={userRef}
           autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          {...userAttribs}
           required
         />
         {/* PASSWORD INPUT AND DISPLAY ERRORS */}
@@ -97,13 +108,22 @@ const Login = () => {
         />
 
         <button>Sign in</button>
-        <p>
-          Need an Account? <br />
-          <span className="line">
-            <Link to='/register'>Sign Up</Link>
-          </span>
-        </p>
+        <div className="persistCheck">
+          <input
+            type="checkbox"
+            onChange={toggleCheck}
+            checked={check}
+            id="persist"
+          />
+          <label htmlFor="persist">Trust this device</label>
+        </div>
       </form>
+      <p>
+        Need an Account? <br />
+        <span className="line">
+          <Link to="/register">Sign Up</Link>
+        </span>
+      </p>
     </section>
   );
 };

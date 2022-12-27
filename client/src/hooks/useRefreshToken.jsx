@@ -9,7 +9,7 @@ const useRefreshToken = () => {
     setAuth((prev) => {
       console.log(JSON.stringify(prev));
       console.log(response.data?.accessToken);
-      return { ...prev, accessToken: response.data.accessToken }; //Mantenemos los datos del usuario pero modificamos el accessToken
+      return { ...prev, roles: response.data.roles, accessToken: response.data.accessToken }; //Mantenemos los datos del usuario pero modificamos el accessToken
     });
     return response.data.accessToken;
   };
